@@ -27,7 +27,7 @@ export const syncUserCreation = inngest.createFunction(
       _id: id,
       name: `${first_name || ""} ${last_name || ""}`.trim(),
       email: email_addresses[0].email_address,
-      image_url: image_url || null,
+      imageUrl: image_url,
     };
 
     await step.run("create-user", async () => {
@@ -60,11 +60,11 @@ export const syncUserUpdate = inngest.createFunction(
     const userData = {
       name: `${first_name || ""} ${last_name || ""}`.trim(),
       email: email_addresses?.[0]?.email_address,
-      image_url: image_url || null,
+      imageUrl: image_url,
     };
 
     await step.run("update-user", async () => {
-      const updated = await User.findByIdAndUpdate(id, userData, { new: true });
+      const updated = await User.findByIdAndUpdate(id, userData, { upsert: true, new: true });
       console.log("🟡 User updated in MongoDB:", updated);
     });
 
